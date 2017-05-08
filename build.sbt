@@ -13,8 +13,8 @@ name := "pre-canned"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
-val akkaVersion = "2.4.17"
-val akkaHttpVersion = "10.0.5"
+val akkaVersion = "2.4.18"
+val akkaHttpVersion = "10.0.6"
 val scalatestVersion = "3.0.3"
 
 libraryDependencies ++=
