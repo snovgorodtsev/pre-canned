@@ -13,17 +13,18 @@ name := "pre-canned"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
-val akka = "2.4.17"
-val akkaHttp = "10.0.5"
+val akkaVersion = "2.4.17"
+val akkaHttpVersion = "10.0.5"
+val scalatestVersion = "3.0.3"
 
 libraryDependencies ++=
-  "com.typesafe.akka" %% "akka-actor" % akka ::
-  "com.typesafe.akka" %% "akka-http-core" % akkaHttp ::
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion ::
+  "com.typesafe.akka" %% "akka-http-core" % akkaHttpVersion ::
   Nil
 
 libraryDependencies ++=
-  "com.typesafe.akka" %% "akka-testkit" % akka % "test" ::
-  "org.scalatest" %% "scalatest" % "3.0.3" % "test" ::
+  "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test" ::
+  "org.scalatest" %% "scalatest" % scalatestVersion % "test" ::
   Nil
 
 scalariformSettings
