@@ -2,27 +2,28 @@ organization := "com.netaporter"
 
 version := "0.0.8"
 
-scalaVersion := "2.11.5"
+val scala211Version = "2.11.11"
+val scala212Version = "2.12.2"
 
-crossScalaVersions := Seq(scalaVersion.value, "2.10.4")
+scalaVersion := scala211Version
+
+crossScalaVersions := Seq(scala211Version, scala212Version)
 
 name := "pre-canned"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
-val akka = "2.3.9"
-val spray = "1.3.1"
+val akka = "2.4.17"
+val akkaHttp = "10.0.5"
 
 libraryDependencies ++=
   "com.typesafe.akka" %% "akka-actor" % akka ::
-  "io.spray" %% "spray-can" % spray ::
-  "io.spray" %% "spray-http" % spray ::
+  "com.typesafe.akka" %% "akka-http-core" % akkaHttp ::
   Nil
 
 libraryDependencies ++=
-  "io.spray" %% "spray-client" % spray % "test" ::
   "com.typesafe.akka" %% "akka-testkit" % akka % "test" ::
-  "org.scalatest" %% "scalatest" % "2.2.4" % "test" ::
+  "org.scalatest" %% "scalatest" % "3.0.3" % "test" ::
   Nil
 
 scalariformSettings
