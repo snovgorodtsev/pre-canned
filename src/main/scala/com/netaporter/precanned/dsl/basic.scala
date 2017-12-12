@@ -13,7 +13,7 @@ import scala.concurrent.{ Await, Future }
 
 object basic extends Expectations with CannedResponses {
 
-  def httpServerMock(af: ActorRefFactory) = {
+  def httpServerMock(af: ActorRefFactory): Start = {
     val actor = af.actorOf(Props[HttpServerMock])
     Start(actor)
   }
@@ -23,7 +23,7 @@ object basic extends Expectations with CannedResponses {
 
     def expect(es: Expect*) = MockExpects(mock, es)
 
-    def clearExpectations(blockUpTo: FiniteDuration = 3.seconds) = {
+    def clearExpectations(blockUpTo: FiniteDuration = 3.seconds): MockDsl = {
       val clearing = mock.ask(ClearExpectations)(Timeout(blockUpTo))
       if (blockUpTo > Duration.Zero) {
         Await.result(clearing, blockUpTo)
@@ -43,7 +43,7 @@ object basic extends Expectations with CannedResponses {
   }
 
   case class BindInProgress(mock: ActorRef, bind: Future[Http.ServerBinding], t: Timeout) extends MockDsl {
-    def block = {
+    def block: BoundComplete = {
       val bound = Await.result(bind, t.duration)
       BoundComplete(mock, bound)
     }
@@ -64,7 +64,7 @@ object basic extends Expectations with CannedResponses {
   }
 
   case class ExpectationAddInProgress(expectInProgress: Future[PrecannedResponseAdded.type]) {
-    def blockFor(blockUpTo: FiniteDuration) = {
+    def blockFor(blockUpTo: FiniteDuration): PrecannedResponseAdded.type = {
       Await.result(expectInProgress, blockUpTo)
     }
   }

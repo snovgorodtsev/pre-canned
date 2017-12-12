@@ -6,14 +6,14 @@ import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
 
 import scala.concurrent.duration._
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 trait BaseSpec {
-  implicit val system = ActorSystem()
-  implicit val ec = system.dispatcher
-  implicit val materializer = ActorMaterializer()
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val ec: ExecutionContextExecutor = system.dispatcher
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
 
-  val dur = 5.seconds
+  val dur: FiniteDuration = 5.seconds
 
   val pipeline: HttpRequest => Future[HttpResponse] = req =>
     Http().singleRequest(req).flatMap(_.toStrict(dur))

@@ -50,10 +50,10 @@ class HttpServerMock extends Actor {
 
   var responses = Vector.empty[ExpectAndRespondWith]
 
-  def responseFor(request: HttpRequest) =
+  private def responseFor(request: HttpRequest) =
     responses.find(_.expects(request)).map(_.respondWith)
 
-  def receive = {
+  def receive: PartialFunction[Any, Unit] = {
     case expectAndRespond: ExpectAndRespondWith =>
       responses :+= expectAndRespond
       sender ! PrecannedResponseAdded

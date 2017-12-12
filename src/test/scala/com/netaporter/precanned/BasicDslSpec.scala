@@ -18,7 +18,7 @@ class BasicDslSpec
   with BaseSpec {
 
   val port = 8765
-  val animalApi = httpServerMock(system).bind(8765).block
+  val animalApi: BoundComplete = httpServerMock(system).bind(8765).block
 
   after { animalApi.clearExpectations() }
   override def afterAll() {
