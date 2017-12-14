@@ -19,7 +19,9 @@ object HttpServerMock {
     val empty = PrecannedResponse(HttpResponse(), Duration.Zero)
   }
 
-  case class ExpectAndRespondWith(expects: Expect, respondWith: PrecannedResponse)
+  case class ExpectAndRespondWith(expects: Expect, respondWith: PrecannedResponse, times: Option[Int] = None) {
+    times.foreach { t => require(t > 0, s"times Some($t) must be a positive value") }
+  }
   case object PrecannedResponseAdded
 
   case object ClearExpectations
@@ -50,8 +52,22 @@ class HttpServerMock extends Actor {
 
   var responses = Vector.empty[ExpectAndRespondWith]
 
-  private def responseFor(request: HttpRequest) =
-    responses.find(_.expects(request)).map(_.respondWith)
+  private def responseFor(request: HttpRequest) = {
+    val i = responses.indexWhere(_.expects(request))
+    if (i == -1) {
+      None
+    } else {
+      val response = responses(i)
+      response.times.foreach { times =>
+        val left = times - 1
+        if (left > 0)
+          responses = responses.updated(i, response.copy(times = Some(left)))
+        else
+          responses = responses.take(i) ++ responses.drop(i + 1)
+      }
+      Some(response.respondWith)
+    }
+  }
 
   def receive: PartialFunction[Any, Unit] = {
     case expectAndRespond: ExpectAndRespondWith =>
