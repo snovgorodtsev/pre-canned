@@ -39,7 +39,6 @@ object basic extends Expectations with CannedResponses {
       val bindFuture = HttpServerMock.startServer(mock, port, interface)
       BindInProgress(mock, bindFuture, t)
     }
-
   }
 
   case class BindInProgress(mock: ActorRef, bind: Future[Http.ServerBinding], t: Timeout) extends MockDsl {
