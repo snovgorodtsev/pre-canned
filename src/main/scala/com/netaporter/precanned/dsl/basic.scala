@@ -50,18 +50,21 @@ object basic extends Expectations with CannedResponses {
 
   case class BoundComplete(mock: ActorRef, binding: Http.ServerBinding) extends MockDsl
 
-  case class MockExpects(mock: ActorRef, expects: Seq[Expect], times: Option[Int] = None) {
+  case class MockExpects(mock: ActorRef, expects: Seq[Expect], numberOfTimes: Option[Int] = None) {
 
-    times.foreach { t => require(t > 0, s"times Some($t) must be a positive value") }
+    numberOfTimes.foreach { num => require(num > 0, s"numberOfTimes Some($num) must be a positive value") }
 
     /** Sets the number of times to respond with this response. Must be positive! */
-    def times(times: Int): MockExpects = this.copy(times = Some(times))
+    def numberOfTimes(num: Int): MockExpects = this.copy(numberOfTimes = Some(num))
+
+    /** Sets the number of times to respond with this response. `None` for unlimited. Must be positive! */
+    def numberOfTimes(num: Option[Int]): MockExpects = this.copy(numberOfTimes = num)
 
     def andRespondWith(pcs: Precanned*): ExpectationAddInProgress = {
       val expectAndRespond = ExpectAndRespondWith(
         expects = r => expects.forall(_.apply(r)),
         respondWith = chain(pcs)(PrecannedResponse.empty),
-        times = times)
+        numberOfTimes = numberOfTimes)
       // 60 seconds is a hack for users who want to use `ExpectationAddInProgress.blockFor`. Would be nice to use their
       // timeout specified in the method, but we do not have that yet here
       // Adding an expectation is a fast operation, so it is reasonably safe to assume we will never need to wait longer

@@ -144,8 +144,8 @@ class BasicDslSpec
     res.entity.asString should equal("OK")
   }
 
-  "times" should "cause the response to be served only limited amount of times" in {
-    animalApi.expect(get, path("/animals")).times(2).andRespondWith(status(200)).blockFor(3.seconds)
+  "numberOfTimes" should "cause the response to be served only limited number of times" in {
+    animalApi.expect(get, path("/animals")).numberOfTimes(2).andRespondWith(status(200)).blockFor(3.seconds)
 
     // first
     val resF1 = pipeline(Get(s"http://127.0.0.1:$port/animals"))
