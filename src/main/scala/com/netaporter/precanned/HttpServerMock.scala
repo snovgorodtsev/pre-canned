@@ -70,6 +70,7 @@ class HttpServerMock extends Actor {
   }
 
   def receive: PartialFunction[Any, Unit] = {
+
     case expectAndRespond: ExpectAndRespondWith =>
       responses :+= expectAndRespond
       sender ! PrecannedResponseAdded
@@ -86,6 +87,7 @@ class HttpServerMock extends Actor {
           } else {
             sender ! response
           }
+
         case None =>
           sender ! HttpResponse(status = NotFound)
       }
