@@ -76,7 +76,7 @@ class HttpServerMock extends Actor {
       }
   }
 
-  def receive: PartialFunction[Any, Unit] = {
+  def receive: Receive = {
 
     case expectAndRespond: ExpectAndRespondWith =>
       responses :+= expectAndRespond

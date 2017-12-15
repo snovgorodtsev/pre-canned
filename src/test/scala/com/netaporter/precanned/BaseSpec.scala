@@ -6,11 +6,11 @@ import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
 
 import scala.concurrent.duration._
-import scala.concurrent.{ ExecutionContextExecutor, Future }
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait BaseSpec {
   implicit val system: ActorSystem = ActorSystem()
-  implicit val ec: ExecutionContextExecutor = system.dispatcher
+  implicit val ec: ExecutionContext = system.dispatcher
   implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   val dur: FiniteDuration = 5.seconds
