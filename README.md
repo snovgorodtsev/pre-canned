@@ -2,14 +2,14 @@ Pre-canned
 ==========
 
 [![Build Status](https://travis-ci.org/a-fistful-of-code/pre-canned.svg?branch=master)](https://travis-ci.org/a-fistful-of-code/pre-canned)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.a-fistful-of-code/pre-canned_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.a-fistful-of-code/pre-canned_2.11)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.a-fistful-of-code/pre-canned_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.a-fistful-of-code/pre-canned_2.13)
 
 Mocking HTTP services on [Akka HTTP](http://doc.akka.io/docs/akka-http/current/scala/http)
 for integration testing.
 
 Port of [NET-A-PORTER/pre-canned](https://github.com/NET-A-PORTER/pre-canned)
 from [spray can](http://spray.io) to [Akka HTTP](http://doc.akka.io/docs/akka-http/current/scala/http),
-cross-compiled for Scala 2.11 and 2.12.
+cross-compiled for 2.12 and 2.13.
 
 Introduction
 ------------
@@ -17,7 +17,7 @@ Introduction
 Pre-canned helps you to mock out the HTTP services your application depends on. This can be especially useful
 for your integration testing.
 
-For SBT add the dependency `"io.github.a-fistful-of-code" %% "pre-canned" % "0.1.1" % "test"`
+For SBT add the dependency `"io.github.a-fistful-of-code" %% "pre-canned" % "0.1.3" % "test"`
 
 DSLs
 ----

@@ -13,7 +13,7 @@ import akka.pattern.ask
 object fancy extends Expectations with CannedResponses {
 
   def httpServerMock(implicit af: ActorRefFactory) = {
-    val actor = af.actorOf(Props[HttpServerMock])
+    val actor = af.actorOf(Props[HttpServerMock]())
     Start(actor)
   }
 
