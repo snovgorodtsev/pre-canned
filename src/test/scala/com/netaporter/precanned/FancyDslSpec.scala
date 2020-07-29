@@ -79,7 +79,7 @@ class FancyDslSpec
     animalApi expect
       get and query("name" -> "giraffe") and
     respond using
-      resource("/responses/giraffe.json") end
+      resource("/responses/giraffe.json") end(blockUpTo = 3.seconds)
 
     val resF = pipeline(Get(s"http://127.0.0.1:$port/animals?name=giraffe"))
     val res = Await.result(resF, dur)
@@ -101,7 +101,7 @@ class FancyDslSpec
     animalApi expect
       get and path("/animals") and
     respond using
-      status(200) and delay(5.seconds) end
+      status(200) and delay(5.seconds) end(blockUpTo = 3.seconds)
 
     val resF = pipeline(Get(s"http://127.0.0.1:$port/animals"))
 
