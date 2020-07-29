@@ -25,7 +25,7 @@ DSLs
 Pre-canned currently comes in two flavours:
 
  * *[`basic`](#basic)* - Simple, but many parentheses
- * *[`fancy`](#fancy)* - Few parentheses, but quite wordy
+ * *[`fancy`](#fancy)* - Few parentheses, but quite wordy. Also requires to enable postfixOps on Scala 2.13
 
 Help make Pre-canned better and submit a new improved flavour via a PR, or ideas for one in an issue.
 
@@ -53,13 +53,14 @@ animalApi.expect(get, path("/animals"), query("name" -> "giraffe"))
 
 ```scala
 import com.netaporter.precanned.dsl.fancy._
+import scala.language.postfixOps
 
 val animalApi = httpServerMock(system).bind(8766).block
 
 animalApi expect
   get and path("/animals") and query("name" -> "giraffe") and
 respond using
-  resource("/responses/giraffe.json") end()
+  resource("/responses/giraffe.json") end
 ```
 
 ### Adding artificial latency
@@ -79,11 +80,12 @@ animalApi.expect(get, path("/animals"))
 
 ```scala
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 animalApi expect
   get and path("/animals") and
 respond using
-  resource("/responses/giraffe.json") and delay(5.seconds) end()
+  resource("/responses/giraffe.json") and delay(5.seconds) end
 ```
 
 ### Blocking until expectations have been added

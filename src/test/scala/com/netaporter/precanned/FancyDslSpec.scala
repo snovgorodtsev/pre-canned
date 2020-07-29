@@ -1,5 +1,7 @@
 package com.netaporter.precanned
 
+import akka.http.scaladsl.model.StatusCodes._
+import akka.http.scaladsl.model.ContentTypes._
 import com.netaporter.precanned.HttpServerMock.PrecannedResponseAdded
 import com.netaporter.precanned.dsl.fancy._
 import org.scalatest.{ BeforeAndAfter, BeforeAndAfterAll }
@@ -8,10 +10,8 @@ import org.scalatest.matchers.should.Matchers
 import akka.http.scaladsl.model.headers._
 
 import scala.concurrent.Await
-import akka.http.scaladsl.model.StatusCodes._
-import akka.http.scaladsl.model.ContentTypes._
-
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 class FancyDslSpec
   extends AnyFlatSpecLike
@@ -24,7 +24,6 @@ class FancyDslSpec
 
   val port = 8766
   val animalApi: BoundComplete = httpServerMock(system).bind(port).block
-  private val defaultBlockUpTo = 3.seconds
 
   after { animalApi.clearExpectations() }
   override def afterAll(): Unit = {
@@ -33,7 +32,7 @@ class FancyDslSpec
 
   "query expectation" should "match in any order" in {
     animalApi expect query ("key1" -> "val1", "key2" -> "val2") and respond using
-      resource("/responses/animals.json") end(defaultBlockUpTo)
+      resource("/responses/animals.json") end
 
     val resF = pipeline(Get(s"http://127.0.0.1:$port?key2=val2&key1=val1"))
     val res = Await.result(resF, dur)
@@ -43,7 +42,7 @@ class FancyDslSpec
 
   "path expectation" should "match path" in {
     animalApi expect path("/animals") and respond using
-      resource("/responses/animals.json") end(defaultBlockUpTo)
+      resource("/responses/animals.json") end
 
     val resF = pipeline(Get(s"http://127.0.0.1:$port/animals"))
     val res = Await.result(resF, dur)
@@ -53,7 +52,7 @@ class FancyDslSpec
 
   "contentType CannedResponse" should "set Content-Type header" in {
     animalApi expect path("/animals") and respond using
-      resource("/responses/animals.json") and contentType(`application/json`) end(defaultBlockUpTo)
+      resource("/responses/animals.json") and contentType(`application/json`) end
 
     val resF = pipeline(Get(s"http://127.0.0.1:$port/animals"))
     val res = Await.result(resF, dur)
@@ -65,7 +64,7 @@ class FancyDslSpec
     animalApi expect
       get and path("/animals") and query("name" -> "giraffe") and
     respond using
-      resource("/responses/giraffe.json") end(defaultBlockUpTo)
+      resource("/responses/giraffe.json") end
 
     val resF = pipeline(Get(s"http://127.0.0.1:$port/animals?name=giraffe"))
     val res = Await.result(resF, dur)
@@ -75,12 +74,12 @@ class FancyDslSpec
 
   "earlier expectations" should "take precedence" in {
     animalApi expect path("/animals") and respond using
-      resource("/responses/animals.json") end(defaultBlockUpTo)
+      resource("/responses/animals.json") end
 
     animalApi expect
       get and query("name" -> "giraffe") and
     respond using
-      resource("/responses/giraffe.json") end(defaultBlockUpTo)
+      resource("/responses/giraffe.json") end
 
     val resF = pipeline(Get(s"http://127.0.0.1:$port/animals?name=giraffe"))
     val res = Await.result(resF, dur)
@@ -90,7 +89,7 @@ class FancyDslSpec
 
   "unmatched requests" should "return 404" in {
     animalApi expect path("/animals") and respond using
-      resource("/responses/animals.json") end(defaultBlockUpTo)
+      resource("/responses/animals.json") end
 
     val resF = pipeline(Get(s"http://127.0.0.1:8766/hotdogs"))
     val res = Await.result(resF, dur)
@@ -102,7 +101,7 @@ class FancyDslSpec
     animalApi expect
       get and path("/animals") and
     respond using
-      status(200) and delay(5.seconds) end(defaultBlockUpTo)
+      status(200) and delay(5.seconds) end
 
     val resF = pipeline(Get(s"http://127.0.0.1:$port/animals"))
 
@@ -118,7 +117,7 @@ class FancyDslSpec
       animalApi expect
         get and path("/animals") and
       respond using
-        status(200) and delay(5.seconds) end(defaultBlockUpTo)
+        status(200) and delay(5.seconds) end
 
     blocked should equal(Some(PrecannedResponseAdded))
   }
@@ -136,7 +135,7 @@ class FancyDslSpec
   "server mock" should "be bound to some available port" in {
     val availablePortApi = httpServerMock(system).bind().block
     val availablePort = availablePortApi.binding.localAddress.getPort
-    availablePortApi expect get and path("/status") and respond using entity("OK") end(defaultBlockUpTo)
+    availablePortApi expect get and path("/status") and respond using entity("OK") end
 
     val resF = pipeline(Get(s"http://127.0.0.1:$availablePort/status"))
     val res = Await.result(resF, dur)
